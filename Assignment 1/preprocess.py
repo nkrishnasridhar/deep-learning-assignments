@@ -24,7 +24,7 @@ def get_data(inputs_file_path, labels_file_path, num_examples):
     :return: NumPy array of inputs as float32 and labels as int8
     """
 
-    # TODO: Load inputs and labels
+    # Load inputs and labels
     with gzip.open(inputs_file_path, "rb") as inputs_file:
         inputs_file.read(16)
         inputs_buffer = inputs_file.read(num_examples * 28 * 28)
@@ -38,4 +38,7 @@ def get_data(inputs_file_path, labels_file_path, num_examples):
 
     labels = np.frombuffer(labels_buffer, dtype=np.int8)
     
-    # TODO: Normalize inputs
+    # Normalize inputs
+    inputs = inputs.astype(np.float32) / 255.0
+
+    return inputs, labels
