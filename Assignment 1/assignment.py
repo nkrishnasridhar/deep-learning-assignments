@@ -16,15 +16,15 @@ class Model:
     """
 
     def __init__(self):
-        # TODO: Initialize all hyperparametrs
-        self.input_size = None # Size of image vectors
-        self.num_classes = None # Number of classes/possible labels
-        self.batch_size = None
-        self.learning_rate = None
+        # Initialize all hyperparametrs
+        self.input_size = 28 * 28 # Size of image vectors
+        self.num_classes = 10 # Number of classes/possible labels
+        self.batch_size = 100
+        self.learning_rate = 0.5
 
-        # TODO: Initialize weights and biases
-        self.W = None
-        self.b = None
+        # Initialize weights and biases
+        self.W = np.zeros((self.num_classes, self.input_size), dtype=np.float32)
+        self.b = np.zeros(self.num_classes, dtype=np.float32)
 
     def call(self, inputs):
         """
