@@ -33,7 +33,7 @@ class Model:
                        (batch_size x 784) (2D), where batch can be any number.
         :return: output, unscaled output values for each class per image # (batch_size x 10)
         """
-        # TODO: Write the forward pass logic for your model
+        return np.dot(inputs, self.W.T) + self.b
 
 
     def back_propagation(self, inputs, outputs, labels):
