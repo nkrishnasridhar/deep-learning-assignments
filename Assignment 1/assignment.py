@@ -62,7 +62,9 @@ class Model:
         :param labels: test set labels
         :return: Float (0,1) that contains batch accuracy
         """
-        # TODO: calculate the batch accuracy
+        predictions = np.argmax(outputs, axis=1)
+        labels = np.reshape(labels, (-1,))
+        return float(np.mean(predictions == labels))
 
     def gradient_descent(self, gradW, gradB):
         """
