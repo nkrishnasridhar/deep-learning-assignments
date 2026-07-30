@@ -1,3 +1,6 @@
+import gzip
+import numpy as np
+
 def get_data(inputs_file_path, labels_file_path, num_examples):
     """
     Takes in an inputs file path and labels file path, unzips both files,
@@ -22,5 +25,11 @@ def get_data(inputs_file_path, labels_file_path, num_examples):
     """
 
     # TODO: Load inputs and labels
+    with gzip.open(inputs_file_path, "rb") as inputs_file:
+        inputs_file.read(16)
+        inputs_buffer = inputs_file.read(num_examples * 28 * 28)
+
+    inputs = np.frombuffer(inputs_buffer, dtype=np.uint8)
+    inputs = np.reshape(inputs, (num_examples, 28 * 28))
     
     # TODO: Normalize inputs
