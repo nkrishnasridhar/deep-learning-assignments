@@ -32,4 +32,10 @@ def get_data(inputs_file_path, labels_file_path, num_examples):
     inputs = np.frombuffer(inputs_buffer, dtype=np.uint8)
     inputs = np.reshape(inputs, (num_examples, 28 * 28))
     
+    with gzip.open(labels_file_path, "rb") as labels_file:
+        labels_file.read(8)
+        labels_buffer = labels_file.read(num_examples)
+
+    labels = np.frombuffer(labels_buffer, dtype=np.int8)
+    
     # TODO: Normalize inputs
