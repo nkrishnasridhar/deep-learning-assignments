@@ -52,6 +52,12 @@ class Model:
         """
         # TODO: calculate the gradients for the weights and the gradients for the bias with respect to average loss
         # HINT: np.argmax(outputs, axis=1) will give the index of the largest output
+        predictions = np.argmax(outputs, axis=1)
+        labels = np.reshape(labels, (-1,))
+
+        true_classes = np.eye(self.num_classes, dtype=np.float32)[labels]
+        predicted_classes = np.eye(self.num_classes, dtype=np.float32)[predictions]
+        yc = true_classes - predicted_classes
 
 
     def accuracy(self, outputs, labels):
