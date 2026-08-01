@@ -59,6 +59,12 @@ class Model:
         predicted_classes = np.eye(self.num_classes, dtype=np.float32)[predictions]
         yc = true_classes - predicted_classes
 
+        batch_size = inputs.shape[0]
+        gradW = np.dot(yc.T, inputs) / batch_size
+        gradB = np.mean(yc, axis=0)
+
+        return gradW, gradB
+
 
     def accuracy(self, outputs, labels):
         """
