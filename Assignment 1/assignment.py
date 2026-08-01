@@ -50,7 +50,7 @@ class Model:
         :param labels: true labels
         :return: gradient for weights, and gradient for biases
         """
-        # TODO: calculate the gradients for the weights and the gradients for the bias with respect to average loss
+        # calculate the gradients for the weights and the gradients for the bias with respect to average loss
         # HINT: np.argmax(outputs, axis=1) will give the index of the largest output
         predictions = np.argmax(outputs, axis=1)
         labels = np.reshape(labels, (-1,))
@@ -86,7 +86,9 @@ class Model:
         :param gradB: gradient for biases
         :return: None
         """
-        # TODO: change the weights and biases of the model to descent the gradient
+        # change the weights and biases of the model to descent the gradient
+        self.W += self.learning_rate * gradW
+        self.b += self.learning_rate * gradB
 
 def train(model, train_inputs, train_labels):
     """
