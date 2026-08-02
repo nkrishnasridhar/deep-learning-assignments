@@ -100,12 +100,12 @@ def train(model, train_inputs, train_labels):
     :return: None
     """
 
-    # TODO: Iterate over the training inputs and labels, in model.batch_size increments
+    # Iterate over the training inputs and labels in model.batch_size increments
     for start in range(0, len(train_inputs), model.batch_size):
         inputs = train_inputs[start:start+model.batch_size]
         labels = train_labels[start:start+model.batch_size]
 
-        # TODO: For every batch, compute then descend the gradients for the model's weights
+        # For every batch, compute then descend the gradients for the model's weights
         probabilities = model.call(inputs)
         gradientsW, gradientsB = model.back_propagation(inputs, probabilities, labels)
         model.gradient_descent(gradientsW, gradientsB)
@@ -121,8 +121,10 @@ def test(model, test_inputs, test_labels):
     :return: accuracy - Float (0,1)
     """
 
-    # TODO: Iterate over the testing inputs and labels
-    # TODO: Return accuracy across testing set
+    # Iterate over the testing inputs and labels
+    # Return accuracy across testing set
+    outputs = model.call(test_inputs)
+    return model.accuracy(outputs, test_labels)
 
 def visualize_results(image_inputs, probabilities, image_labels):
     """
