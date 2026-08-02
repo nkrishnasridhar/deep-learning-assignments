@@ -159,15 +159,33 @@ def main(mnist_data_folder):
     batches you run through in a single epoch. You should receive a final accuracy on the testing examples of > 80%.
     :return: None
     """
-    # TODO: load MNIST train and test examples into train_inputs, train_labels, test_inputs, test_labels
+    # load MNIST train and test examples into train_inputs, train_labels, test_inputs, test_labels
+    train_inputs, train_labels = get_data(
+        os.path.join(mnist_data_folder, "train-images-idx3-ubyte.gz"),
+        os.path.join(mnist_data_folder, "train-labels-idx1-ubyte.gz"),
+        60000,
+    )
+    test_inputs, test_labels = get_data(
+        os.path.join(mnist_data_folder, "t10k-images-idx3-ubyte.gz"),
+        os.path.join(mnist_data_folder, "t10k-labels-idx1-ubyte.gz"),
+        10000,
+    )
 
-    # TODO: Create Model
+    # Create Model
+    model = Model()
 
-    # TODO: Train model by calling train() ONCE on all data
+    # Train model by calling train() ONCE on all data
+    train(model, train_inputs, train_labels)
 
-    # TODO: Test the accuracy by calling test() after running train()
+    # Test the accuracy by calling test() after running train()
+    accuracy = test(model, test_inputs, test_labels)
+    print("Test accuracy:", accuracy)
 
-    # TODO: Visualize the data by using visualize_results()
+    # Visualize the data by using visualize_results()
+    sample_inputs = test_inputs[:10]
+    sample_labels = test_labels[:10]
+    sample_outputs = model.call(sample_inputs)
+    visualize_results(sample_inputs, sample_outputs, sample_labels)
 
     print("end of assignment 1")
 
