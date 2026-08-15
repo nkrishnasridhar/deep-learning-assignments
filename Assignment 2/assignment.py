@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from matplotlib import pyplot as plt
-from preprocess import get_data
+from preprocess import get_data, unpickle
 from convolution import conv2d
 
 import os
@@ -146,11 +146,17 @@ def main(cifar10_data_folder):
 	of ~60% for Part1 and ~70% for Part3.
 	:return: None
 	'''
-
-	return
+	# Load the raw CIFAR pickles and print their shapes
+	for split in ('train', 'test'):
+		raw = unpickle(os.path.join(cifar10_data_folder, split))
+		data = raw[b'data']
+		labels = raw[b'labels']
+		print(split, 'data shape', data.shape, 'dtype', data.dtype)
+		print(split, 'num labels', len(labels),
+		      'min', min(labels), 'max', max(labels),
+		      'unique', sorted(set(labels)))
 
 
 if __name__ == '__main__':
-    local_home = os.path.expanduser("~")  # on my system this is /Users/jat171
-    cifar_data_folder = local_home + '/CIFAR_data/'
+    cifar_data_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'CIFAR_data')
     main(cifar_data_folder)
