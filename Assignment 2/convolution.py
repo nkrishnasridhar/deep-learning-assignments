@@ -43,7 +43,11 @@ def conv2d(inputs, filters, strides, padding):
 	# Calculate output dimensions
 	out_height = (in_height + 2 * padY - filter_height) // strideY + 1
 	out_width = (in_width + 2 * padX - filter_width) // strideX + 1
-	output = np.zeros((num_examples, out_height, out_width, filter_out_channels),	dtype=np.float32)
+	output = np.zeros((num_examples, out_height, out_width, filter_out_channels), dtype=np.float32)
+	for i in range(out_height):
+		for j in range(out_width):
+			patch = padded_inputs[:, i * strideY:i * strideY + filter_height,	j * strideX:j * strideX + filter_width,	:]
+			output[:, i, j, :] = np.tensordot(patch, filters, axes=([1, 2, 3], [0, 1, 2]))
 	return output
 
 
