@@ -60,8 +60,7 @@ def loss(logits, labels):
 	:param labels: during training, matrix of shape (batch_size, self.num_classes) containing the train labels
 	:return: the loss of the model as a Tensor
 	"""
-
-	pass
+	return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=labels, logits=logits))
 
 def accuracy(logits, labels):
 	"""
