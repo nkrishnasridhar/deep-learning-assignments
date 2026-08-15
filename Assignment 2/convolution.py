@@ -15,20 +15,18 @@ def conv2d(inputs, filters, strides, padding):
 	:param padding: either "SAME" or "VALID", capitalization matters
 	:return: outputs, NumPy array or Tensor with shape [num_examples, output_height, output_width, output_channels]
 	"""
-	num_examples = None
-	in_height = None
-	in_width = None
-	input_in_channels = None
+	if hasattr(inputs, "numpy"):
+		inputs = inputs.numpy()
+	if hasattr(filters, "numpy"):
+		filters = filters.numpy()
+	inputs = np.array(inputs)
+	filters = np.array(filters)
 
-	filter_height = None
-	filter_width = None
-	filter_in_channels = None
-	filter_out_channels = None
+	num_examples, in_height, in_width, input_in_channels = inputs.shape
+	filter_height, filter_width, filter_in_channels, filter_out_channels = filters.shape
+	assert input_in_channels == filter_in_channels, ("input in_channels ({}) must equal filter in_channels ({})".format(input_in_channels, filter_in_channels))
 
-	num_examples_stride = None
-	strideY = None
-	strideX = None
-	channels_stride = None
+	num_examples_stride, strideY, strideX, channels_stride = strides
 
 	# Cleaning padding input
 
