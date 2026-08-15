@@ -54,7 +54,7 @@ class ModelPart0:
 class ModelPart1:
     def __init__(self):
         """
-        This model class contains a single layer network similar to Assignment 1.
+        Two-layer network: flatten -> linear 256 -> ReLU -> linear 2.
         """
 
         self.batch_size = 64
@@ -62,18 +62,26 @@ class ModelPart1:
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
         input = 32 * 32 * 3
+        hidden = 256
         output = 2
-        self.W1 = tf.Variable(tf.random.truncated_normal([input, output],
+        self.W1 = tf.Variable(tf.random.truncated_normal([input, hidden],
                                                          dtype=tf.float32,
                                                          stddev=0.1),
                               name="W1")
-        self.B1 = tf.Variable(tf.random.truncated_normal([1, output],
+        self.B1 = tf.Variable(tf.random.truncated_normal([1, hidden],
                                                          dtype=tf.float32,
                                                          stddev=0.1),
                               name="B1")
+        self.W2 = tf.Variable(tf.random.truncated_normal([hidden, output],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="W2")
+        self.B2 = tf.Variable(tf.random.truncated_normal([1, output],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="B2")
 
-
-        self.trainable_variables = [self.W1, self.B1]
+        self.trainable_variables = [self.W1, self.B1, self.W2, self.B2]
 
 
     def call(self, inputs):
@@ -82,9 +90,9 @@ class ModelPart1:
         :param inputs: images, shape of (num_inputs, 32, 32, 3); during training, the shape is (batch_size, 32, 32, 3)
         :return: logits - a matrix of shape (num_inputs, num_classes); during training, it would be (batch_size, 2)
         """
-        inputs = np.reshape(inputs, [inputs.shape[0],-1])
-        x = linear_unit(inputs, self.W1, self.B1)
-        return x
+        inputs = np.reshape(inputs, [inputs.shape[0], -1])
+        hidden = tf.nn.relu(linear_unit(inputs, self.W1, self.B1))
+        return linear_unit(hidden, self.W2, self.B2)
 
 def loss(logits, labels):
 	"""
