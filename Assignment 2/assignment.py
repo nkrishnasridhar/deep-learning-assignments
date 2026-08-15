@@ -94,6 +94,54 @@ class ModelPart1:
         hidden = tf.nn.relu(linear_unit(inputs, self.W1, self.B1))
         return linear_unit(hidden, self.W2, self.B2)
 
+class ModelPart3:
+    def __init__(self):
+        """
+        CNN: conv 5x5x16 SAME -> ReLU -> flatten -> linear 256 -> ReLU -> linear 2.
+        """
+
+        self.batch_size = 64
+        self.num_classes = 2
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+
+        num_filters = 16
+        hidden = 256
+        output = 2
+        self.F1 = tf.Variable(tf.random.truncated_normal([5, 5, 3, num_filters],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="F1")
+        self.W1 = tf.Variable(tf.random.truncated_normal(
+            [32 * 32 * num_filters, hidden], dtype=tf.float32, stddev=0.1),
+                              name="W1")
+        self.B1 = tf.Variable(tf.random.truncated_normal([1, hidden],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="B1")
+        self.W2 = tf.Variable(tf.random.truncated_normal([hidden, output],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="W2")
+        self.B2 = tf.Variable(tf.random.truncated_normal([1, output],
+                                                         dtype=tf.float32,
+                                                         stddev=0.1),
+                              name="B2")
+
+        self.trainable_variables = [self.F1, self.W1, self.B1, self.W2, self.B2]
+
+
+    def call(self, inputs):
+        """
+        Runs a forward pass on an input batch of images.
+        :param inputs: images, shape of (num_inputs, 32, 32, 3); during training, the shape is (batch_size, 32, 32, 3)
+        :return: logits - a matrix of shape (num_inputs, num_classes); during training, it would be (batch_size, 2)
+        """
+        conv = tf.nn.conv2d(inputs, self.F1, strides=[1, 1, 1, 1], padding="SAME")
+        conv = tf.nn.relu(conv)
+        flattened = tf.reshape(conv, [tf.shape(inputs)[0], -1])
+        hidden = tf.nn.relu(linear_unit(flattened, self.W1, self.B1))
+        return linear_unit(hidden, self.W2, self.B2)
+
 def loss(logits, labels):
 	"""
 	Calculates the cross-entropy loss after one forward pass.
