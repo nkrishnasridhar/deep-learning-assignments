@@ -97,7 +97,7 @@ class ModelPart1:
 class ModelPart3:
     def __init__(self):
         """
-        CNN: conv 5x5x16 SAME -> ReLU -> flatten -> linear 256 -> ReLU -> linear 2.
+        CNN: conv 5x5x16 SAME -> ReLU -> maxpool 2x2 -> flatten -> linear 256 -> ReLU -> linear 2.
         """
 
         self.batch_size = 64
@@ -112,7 +112,7 @@ class ModelPart3:
                                                          stddev=0.1),
                               name="F1")
         self.W1 = tf.Variable(tf.random.truncated_normal(
-            [32 * 32 * num_filters, hidden], dtype=tf.float32, stddev=0.1),
+            [16 * 16 * num_filters, hidden], dtype=tf.float32, stddev=0.1),
                               name="W1")
         self.B1 = tf.Variable(tf.random.truncated_normal([1, hidden],
                                                          dtype=tf.float32,
@@ -138,7 +138,8 @@ class ModelPart3:
         """
         conv = tf.nn.conv2d(inputs, self.F1, strides=[1, 1, 1, 1], padding="SAME")
         conv = tf.nn.relu(conv)
-        flattened = tf.reshape(conv, [tf.shape(inputs)[0], -1])
+        pooled = tf.nn.max_pool2d(conv, ksize=2, strides=2, padding="VALID")
+        flattened = tf.reshape(pooled, [tf.shape(inputs)[0], -1])
         hidden = tf.nn.relu(linear_unit(flattened, self.W1, self.B1))
         return linear_unit(hidden, self.W2, self.B2)
 
@@ -267,8 +268,10 @@ def main(cifar10_data_folder):
 			float(test(model, test_inputs, test_labels))))
 
 	print('Test accuracy:', test(model, test_inputs, test_labels))
-	visualize_results(test_inputs[:10], model.call(test_inputs[:10]),
-	                  test_labels[:10], 'cat', 'dog')
+	sample_inputs = test_inputs[:10]
+	sample_labels = test_labels[:10]
+	sample_probs = tf.nn.softmax(model.call(sample_inputs))
+	visualize_results(sample_inputs, sample_probs, sample_labels, 'cat', 'dog')
 
 
 if __name__ == '__main__':
