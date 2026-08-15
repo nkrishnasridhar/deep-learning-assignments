@@ -97,6 +97,7 @@ def train(model, train_inputs, train_labels):
 	for start in range(0, train_inputs.shape[0], model.batch_size):
 		batch_inputs = train_inputs[start:start + model.batch_size]
 		batch_labels = train_labels[start:start + model.batch_size]
+		batch_inputs = tf.reshape(batch_inputs, [-1, 32, 32, 3])
 		with tf.GradientTape() as tape:
 			logits = model.call(batch_inputs)
 			batch_loss = loss(logits, batch_labels)
@@ -164,13 +165,15 @@ def main(cifar10_data_folder):
 	print(test_inputs.shape)
 
 	model = ModelPart0()
+	print('Training ModelPart0')
 	for epoch in range(25):
 		train(model, train_inputs, train_labels)
 		train_logits = model.call(train_inputs)
-		print('epoch', epoch,
-		      'loss', float(loss(train_logits, train_labels)),
-		      'train accuracy', float(accuracy(train_logits, train_labels)),
-		      'validate accuracy', float(test(model, test_inputs, test_labels)))
+		print('epoch {} loss {:.3f} train accuracy {:.3f} validate accuracy {:.3f}'.format(
+			epoch,
+			float(loss(train_logits, train_labels)),
+			float(accuracy(train_logits, train_labels)),
+			float(test(model, test_inputs, test_labels))))
 
 	print('Test accuracy:', test(model, test_inputs, test_labels))
 	visualize_results(test_inputs[:10], model.call(test_inputs[:10]),
