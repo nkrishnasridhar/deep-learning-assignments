@@ -94,6 +94,15 @@ def train(model, train_inputs, train_labels):
 	train_inputs = tf.gather(train_inputs, indices)
 	train_labels = tf.gather(train_labels, indices)
 
+	for start in range(0, train_inputs.shape[0], model.batch_size):
+		batch_inputs = train_inputs[start:start + model.batch_size]
+		batch_labels = train_labels[start:start + model.batch_size]
+		with tf.GradientTape() as tape:
+			logits = model.call(batch_inputs)
+			batch_loss = loss(logits, batch_labels)
+		gradients = tape.gradient(batch_loss, model.trainable_variables)
+		model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+
 def test(model, test_inputs, test_labels):
 	"""
 	Tests the model on the test inputs and labels.
