@@ -29,6 +29,16 @@ def conv2d(inputs, filters, strides, padding):
 	num_examples_stride, strideY, strideX, channels_stride = strides
 
 	# Cleaning padding input
+	if padding == "SAME":
+		padY = (filter_height - 1) // 2
+		padX = (filter_width - 1) // 2
+	elif padding == "VALID":
+		padY = 0
+		padX = 0
+	else:
+		raise ValueError("padding must be 'SAME' or 'VALID'")
+
+	padded_inputs = np.pad(inputs, ((0, 0), (padY, padY), (padX, padX), (0, 0)))
 
 	# Calculate output dimensions
 
