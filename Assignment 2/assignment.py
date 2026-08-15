@@ -160,12 +160,21 @@ def main(cifar10_data_folder):
 		os.path.join(cifar10_data_folder, 'train'), CLASS_CAT, CLASS_DOG)
 	test_inputs, test_labels = get_data(
 		os.path.join(cifar10_data_folder, 'test'), CLASS_CAT, CLASS_DOG)
-	print('train', train_inputs.shape, train_inputs.dtype,
-	      'min', train_inputs.min(), 'max', train_inputs.max())
-	print('train labels', train_labels.shape, 'example', train_labels[:3].numpy())
-	print('test', test_inputs.shape, test_inputs.dtype,
-	      'min', test_inputs.min(), 'max', test_inputs.max())
-	print('test labels', test_labels.shape, 'example', test_labels[:3].numpy())
+	print(train_inputs.shape)
+	print(test_inputs.shape)
+
+	model = ModelPart0()
+	for epoch in range(25):
+		train(model, train_inputs, train_labels)
+		train_logits = model.call(train_inputs)
+		print('epoch', epoch,
+		      'loss', float(loss(train_logits, train_labels)),
+		      'train accuracy', float(accuracy(train_logits, train_labels)),
+		      'validate accuracy', float(test(model, test_inputs, test_labels)))
+
+	print('Test accuracy:', test(model, test_inputs, test_labels))
+	visualize_results(test_inputs[:10], model.call(test_inputs[:10]),
+	                  test_labels[:10], 'cat', 'dog')
 
 
 if __name__ == '__main__':
