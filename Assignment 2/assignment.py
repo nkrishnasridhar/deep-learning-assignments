@@ -151,11 +151,11 @@ def main(cifar10_data_folder):
 	test_inputs, test_labels = get_data(
 		os.path.join(cifar10_data_folder, 'test'), CLASS_CAT, CLASS_DOG)
 	print('train', train_inputs.shape, train_inputs.dtype,
-	      'min', train_inputs.min(), 'max', train_inputs.max(),
-	      'labels', train_labels.shape, 'unique', np.unique(train_labels))
+	      'min', train_inputs.min(), 'max', train_inputs.max())
+	print('train labels', train_labels.shape, 'example', train_labels[:3].numpy())
 	print('test', test_inputs.shape, test_inputs.dtype,
-	      'min', test_inputs.min(), 'max', test_inputs.max(),
-	      'labels', test_labels.shape, 'unique', np.unique(test_labels))
+	      'min', test_inputs.min(), 'max', test_inputs.max())
+	print('test labels', test_labels.shape, 'example', test_labels[:3].numpy())
 
 
 if __name__ == '__main__':

@@ -54,6 +54,8 @@ def pre_process_data(inputs, labels, first_class, second_class):
 	inputs = np.transpose(inputs, (0, 2, 3, 1))
 	# Scale pixels from 0-255 into [0, 1] to avoid overflow during training
 	inputs = inputs.astype(np.float32) / 255.0
+	# Class index 0 -> [1, 0], class index 1 -> [0, 1]
+	labels = tf.one_hot(labels, depth=2)
 	return inputs, labels
 
 def get_data(file_path, first_class, second_class):
