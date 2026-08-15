@@ -41,8 +41,12 @@ def pre_process_data(inputs, labels, first_class, second_class):
 	inputs are of type np.float32 and has size (num_inputs, width, height, num_channels) and labels
 	has size (num_examples, num_classes)
 	"""
-	# TODO: Do the preprocessing!
-	pass
+	# Keep only the two target classes (e.g. cat=3 and dog=5).
+	labels = np.array(labels)
+	keep = (labels == first_class) | (labels == second_class)
+	inputs = inputs[keep]
+	labels = labels[keep]
+	return inputs, labels
 
 def get_data(file_path, first_class, second_class):
 	"""

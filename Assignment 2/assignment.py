@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 from matplotlib import pyplot as plt
-from preprocess import get_data, unpickle
+from preprocess import get_data
 from convolution import conv2d
 
 import os
@@ -146,15 +146,14 @@ def main(cifar10_data_folder):
 	of ~60% for Part1 and ~70% for Part3.
 	:return: None
 	'''
-	# Load the raw CIFAR pickles and print their shapes
-	for split in ('train', 'test'):
-		raw = unpickle(os.path.join(cifar10_data_folder, split))
-		data = raw[b'data']
-		labels = raw[b'labels']
-		print(split, 'data shape', data.shape, 'dtype', data.dtype)
-		print(split, 'num labels', len(labels),
-		      'min', min(labels), 'max', max(labels),
-		      'unique', sorted(set(labels)))
+	train_inputs, train_labels = get_data(
+		os.path.join(cifar10_data_folder, 'train'), CLASS_CAT, CLASS_DOG)
+	test_inputs, test_labels = get_data(
+		os.path.join(cifar10_data_folder, 'test'), CLASS_CAT, CLASS_DOG)
+	print('train', train_inputs.shape, 'labels', train_labels.shape,
+	      'unique', np.unique(train_labels))
+	print('test', test_inputs.shape, 'labels', test_labels.shape,
+	      'unique', np.unique(test_labels))
 
 
 if __name__ == '__main__':
