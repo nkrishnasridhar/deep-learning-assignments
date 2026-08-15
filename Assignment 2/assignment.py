@@ -255,8 +255,8 @@ def main(cifar10_data_folder):
 	print(train_inputs.shape)
 	print(test_inputs.shape)
 
-	model = ModelPart1()
-	print('Training ModelPart1')
+	model = ModelPart3()
+	print('Training ModelPart3')
 	for epoch in range(25):
 		train(model, train_inputs, train_labels)
 		train_logits = model.call(train_inputs)
