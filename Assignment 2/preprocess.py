@@ -46,6 +46,8 @@ def pre_process_data(inputs, labels, first_class, second_class):
 	keep = (labels == first_class) | (labels == second_class)
 	inputs = inputs[keep]
 	labels = labels[keep]
+	# Binary labels: first_class (cat) -> 0, second_class (dog) -> 1.
+	labels = np.where(labels == first_class, 0, 1)
 	return inputs, labels
 
 def get_data(file_path, first_class, second_class):
