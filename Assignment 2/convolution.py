@@ -41,7 +41,9 @@ def conv2d(inputs, filters, strides, padding):
 	padded_inputs = np.pad(inputs, ((0, 0), (padY, padY), (padX, padX), (0, 0)))
 
 	# Calculate output dimensions
-
-	pass
+	out_height = (in_height + 2 * padY - filter_height) // strideY + 1
+	out_width = (in_width + 2 * padX - filter_width) // strideX + 1
+	output = np.zeros((num_examples, out_height, out_width, filter_out_channels),	dtype=np.float32)
+	return output
 
 
