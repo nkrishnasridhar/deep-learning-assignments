@@ -97,22 +97,24 @@ class ModelPart1:
 class ModelPart3:
     def __init__(self):
         """
-        CNN: conv 5x5x16 SAME -> ReLU -> maxpool 2x2 -> flatten -> linear 256 -> ReLU -> linear 2.
+        CNN: conv16-ReLU-pool -> conv32-ReLU-pool -> flatten -> linear 256 -> ReLU -> linear 2.
         """
 
         self.batch_size = 64
         self.num_classes = 2
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
-        num_filters = 16
+        num_filters1 = 16
+        num_filters2 = 32
         hidden = 256
         output = 2
-        self.F1 = tf.Variable(tf.random.truncated_normal([5, 5, 3, num_filters],
+        self.F1 = tf.Variable(tf.random.truncated_normal([5, 5, 3, num_filters1],
                                                          dtype=tf.float32,
                                                          stddev=0.1),
                               name="F1")
-        self.W1 = tf.Variable(tf.random.truncated_normal(
-            [16 * 16 * num_filters, hidden], dtype=tf.float32, stddev=0.1),
+        self.F2 = tf.Variable(tf.random.truncated_normal([5, 5, num_filters1, num_filters2], dtype=tf.float32, stddev=0.1),
+                              name="F2")
+        self.W1 = tf.Variable(tf.random.truncated_normal([8 * 8 * num_filters2, hidden], dtype=tf.float32, stddev=0.1),
                               name="W1")
         self.B1 = tf.Variable(tf.random.truncated_normal([1, hidden],
                                                          dtype=tf.float32,
@@ -127,7 +129,7 @@ class ModelPart3:
                                                          stddev=0.1),
                               name="B2")
 
-        self.trainable_variables = [self.F1, self.W1, self.B1, self.W2, self.B2]
+        self.trainable_variables = [self.F1, self.F2, self.W1, self.B1, self.W2, self.B2]
 
 
     def call(self, inputs):
@@ -136,10 +138,11 @@ class ModelPart3:
         :param inputs: images, shape of (num_inputs, 32, 32, 3); during training, the shape is (batch_size, 32, 32, 3)
         :return: logits - a matrix of shape (num_inputs, num_classes); during training, it would be (batch_size, 2)
         """
-        conv = tf.nn.conv2d(inputs, self.F1, strides=[1, 1, 1, 1], padding="SAME")
-        conv = tf.nn.relu(conv)
-        pooled = tf.nn.max_pool2d(conv, ksize=2, strides=2, padding="VALID")
-        flattened = tf.reshape(pooled, [tf.shape(inputs)[0], -1])
+        conv1 = tf.nn.relu(tf.nn.conv2d(inputs, self.F1, strides=[1, 1, 1, 1], padding="SAME"))
+        pool1 = tf.nn.max_pool2d(conv1, ksize=2, strides=2, padding="VALID")
+        conv2 = tf.nn.relu(tf.nn.conv2d(pool1, self.F2, strides=[1, 1, 1, 1], padding="SAME"))
+        pool2 = tf.nn.max_pool2d(conv2, ksize=2, strides=2, padding="VALID")
+        flattened = tf.reshape(pool2, [tf.shape(inputs)[0], -1])
         hidden = tf.nn.relu(linear_unit(flattened, self.W1, self.B1))
         return linear_unit(hidden, self.W2, self.B2)
 
