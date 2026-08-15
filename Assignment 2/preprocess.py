@@ -52,6 +52,8 @@ def pre_process_data(inputs, labels, first_class, second_class):
 	# Reshape to (N, 3, 32, 32) then transpose to (N, 32, 32, 3) for TensorFlow (height, width, channels)
 	inputs = np.reshape(inputs, (-1, 3, 32, 32))
 	inputs = np.transpose(inputs, (0, 2, 3, 1))
+	# Scale pixels from 0-255 into [0, 1] to avoid overflow during training
+	inputs = inputs.astype(np.float32) / 255.0
 	return inputs, labels
 
 def get_data(file_path, first_class, second_class):
