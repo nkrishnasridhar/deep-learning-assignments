@@ -89,8 +89,10 @@ def train(model, train_inputs, train_labels):
 	shape (num_labels, num_classes)
 	:return: None
 	'''
-
-	pass
+	# Same permutation for images and labels so pairs stay aligned
+	indices = tf.random.shuffle(tf.range(train_inputs.shape[0]))
+	train_inputs = tf.gather(train_inputs, indices)
+	train_labels = tf.gather(train_labels, indices)
 
 def test(model, test_inputs, test_labels):
 	"""
