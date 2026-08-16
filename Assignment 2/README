@@ -1,1 +1,16 @@
 README CNN_CIFAR
+
+# Answers for Conceptual Questions
+Q1: Should be all good, given all expected packages exist
+
+Q2: A convolutional neural net is better suited. The three images show the same digit 3 shifted left, centre, and right, and a fully connected net assigns a separate weight to each pixel location, so a shift activates a completely different set of weights. Convolution reuses the same local filters at every position, so the curved strokes of a 3 can be detected wherever they appear.
+
+Q3: Class 1 is the inside of a circle with a radius of about 2.5 (in the gap between the two groups)
+output = relu(6.25 - x1 * x1 - x2 * x2) > 0
+
+Q4:
+(a) The researchers claim that face images contain cues of “criminality” that a classifier can read out. They report structural features such as upper lip curvature, the distance between the inner corners of the eyes, and the nose-mouth angle as discriminating.
+
+(b) One potential confounding variable is the limited demographic makeup of the dataset. All of the participants were Chinese men aged 18-55 with no facial hair. The algorithm may have learned patterns specific to this particular population rather than features associated with “criminality” in general. Therefore, the reported 89.5% accuracy does not necesarily mean the algorithm would be effective when applied to different populations.
+
+(c) A false positive could label an innocent person as a “criminal,” potentially leading to increased police attention or other discrimination based on an incorrect prediction. This is especially dangerous because people could be treated as lawbreakers even though they have never committed a crime. A false negative could also create a false sense of security.
