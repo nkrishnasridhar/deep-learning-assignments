@@ -41,20 +41,15 @@ def pre_process_data(inputs, labels, first_class, second_class):
 	inputs are of type np.float32 and has size (num_inputs, width, height, num_channels) and labels
 	has size (num_examples, num_classes)
 	"""
-	# Keep only the two target classes (e.g. cat=3 and dog=5)
+	# Do the preprocessing!
 	labels = np.array(labels)
 	keep = (labels == first_class) | (labels == second_class)
 	inputs = inputs[keep]
 	labels = labels[keep]
-	# Binary labels: first_class (cat) -> 0, second_class (dog) -> 1
 	labels = np.where(labels == first_class, 0, 1)
-	# CIFAR stores each image as R, then G, then B
-	# Reshape to (N, 3, 32, 32) then transpose to (N, 32, 32, 3) for TensorFlow (height, width, channels)
 	inputs = np.reshape(inputs, (-1, 3, 32, 32))
 	inputs = np.transpose(inputs, (0, 2, 3, 1))
-	# Scale pixels from 0-255 into [0, 1] to avoid overflow during training
 	inputs = inputs.astype(np.float32) / 255.0
-	# Class index 0 -> [1, 0], class index 1 -> [0, 1]
 	labels = tf.one_hot(labels, depth=2)
 	return inputs, labels
 

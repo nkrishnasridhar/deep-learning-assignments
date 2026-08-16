@@ -1,7 +1,7 @@
 README CNN_CIFAR
 
 # Answers for Conceptual Questions
-Q1: Should be all good, given all expected packages exist
+Q1: Should be all good, given all expected packages exist. Data is in CIFAR_data next to assignment.py (the notebook already passes that path into main)
 
 Q2: A convolutional neural net is better suited. The three images show the same digit 3 shifted left, centre, and right, and a fully connected net assigns a separate weight to each pixel location, so a shift activates a completely different set of weights. Convolution reuses the same local filters at every position, so the curved strokes of a 3 can be detected wherever they appear.
 

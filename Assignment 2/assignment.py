@@ -54,7 +54,7 @@ class ModelPart0:
 class ModelPart1:
     def __init__(self):
         """
-        Two-layer network: flatten -> linear 256 -> ReLU -> linear 2.
+        This model class contains a two layer network.
         """
 
         self.batch_size = 64
@@ -97,7 +97,7 @@ class ModelPart1:
 class ModelPart3:
     def __init__(self):
         """
-        CNN: conv16-ReLU-pool -> conv32-ReLU-pool -> flatten -> linear 256 -> ReLU -> linear 2.
+        This model class contains a convolutional network.
         """
 
         self.batch_size = 64
@@ -142,7 +142,7 @@ class ModelPart3:
         pool1 = tf.nn.max_pool2d(conv1, ksize=2, strides=2, padding="VALID")
         conv2 = tf.nn.relu(tf.nn.conv2d(pool1, self.F2, strides=[1, 1, 1, 1], padding="SAME"))
         pool2 = tf.nn.max_pool2d(conv2, ksize=2, strides=2, padding="VALID")
-        flattened = tf.reshape(pool2, [tf.shape(inputs)[0], -1])
+        flattened = tf.reshape(pool2, [inputs.shape[0], -1])
         hidden = tf.nn.relu(linear_unit(flattened, self.W1, self.B1))
         return linear_unit(hidden, self.W2, self.B2)
 
@@ -184,7 +184,6 @@ def train(model, train_inputs, train_labels):
 	shape (num_labels, num_classes)
 	:return: None
 	'''
-	# Same permutation for images and labels so pairs stay aligned
 	indices = tf.random.shuffle(tf.range(train_inputs.shape[0]))
 	train_inputs = tf.gather(train_inputs, indices)
 	train_labels = tf.gather(train_labels, indices)
@@ -260,7 +259,6 @@ def main(cifar10_data_folder):
 	print(test_inputs.shape)
 
 	model = ModelPart3()
-	print('Training ModelPart3')
 	for epoch in range(25):
 		train(model, train_inputs, train_labels)
 		train_logits = model.call(train_inputs)
@@ -271,10 +269,8 @@ def main(cifar10_data_folder):
 			float(test(model, test_inputs, test_labels))))
 
 	print('Test accuracy:', test(model, test_inputs, test_labels))
-	sample_inputs = test_inputs[:10]
-	sample_labels = test_labels[:10]
-	sample_probs = tf.nn.softmax(model.call(sample_inputs))
-	visualize_results(sample_inputs, sample_probs, sample_labels, 'cat', 'dog')
+	visualize_results(test_inputs[:10], model.call(test_inputs[:10]),
+	                  test_labels[:10], "cat", "dog")
 
 
 if __name__ == '__main__':
